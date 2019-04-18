@@ -3,9 +3,6 @@ from pyspark.sql import SparkSession
 
 if __name__ == "__main__":
 
-    input_file = sys.argv[1]
-    output_dir = sys.argv[2]
-
     # create spark session
     spark = SparkSession\
             .builder\
@@ -14,6 +11,11 @@ if __name__ == "__main__":
 
     log4jLogger = spark._jvm.org.apache.log4j
     log = log4jLogger.LogManager.getLogger(__name__)
+
+    list_arg = sys.argv[1].split(';')
+
+    input_file = list_arg[0]
+    output_dir = list_arg[1]
 
     # load file into df
     iris_df = spark.read.csv(input_file, header=True, inferSchema=True)
