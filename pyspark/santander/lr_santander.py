@@ -14,20 +14,14 @@ if __name__ == "__main__":
 
     list_arg = sys.argv[1].split(';')
     input_file = list_arg[0]
+    output_folder = list_arg[1]
 
     # load file into df
-    #file = "s3a://hdp-hive-s3/santander/train.csv"
     train_df = spark.read.csv(input_file, header=True, inferSchema=True)
 
     train_df = train_df.drop("ID_code")
 
     columns = train_df.columns
-
-    ##NB: not needed!! target is already numeric
-    #label
-    #from pyspark.ml.feature import StringIndexer
-    #label = StringIndexer(inputCol="target", outputCol="targetIndex").fit(train_df)
-    #train_df = label.transform(train_df)
 
     #features
     from pyspark.ml.feature import VectorAssembler
@@ -46,6 +40,7 @@ if __name__ == "__main__":
 
     reg = 0.01
     maxiter = 10
+    
     # log regularization rate
     log.warn("reg {}".format(reg))
     log.warn("maxiter {}".format(maxiter))
@@ -65,3 +60,10 @@ if __name__ == "__main__":
 
     log.warn('Regularization rate is {}'.format(reg))
     log.warn("Accuracy is {}".format(accuracy))
+
+    from pyspark.sql.types import FloatType
+    df = spark.createDataFrame([accuracy], FloatType())
+
+    df.write.csv(output_dir)
+
+    log.warn("Output saved to {}".format(output_dir))
