@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     train_df = train_df.drop("ID_code")
 
-    columns = train_df.columns
+    columns = train_df.columns[1:]
 
     #features
     from pyspark.ml.feature import VectorAssembler
