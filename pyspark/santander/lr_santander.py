@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     reg = 0.01
     maxiter = 10
-    
+
     # log regularization rate
     log.warn("reg {}".format(reg))
     log.warn("maxiter {}".format(maxiter))
@@ -64,6 +64,6 @@ if __name__ == "__main__":
     from pyspark.sql.types import FloatType
     df = spark.createDataFrame([accuracy], FloatType())
 
-    df.write.csv(output_dir)
+    df.coalesce(1).write.csv(output_folder)
 
-    log.warn("Output saved to {}".format(output_dir))
+    log.warn("Output saved to {}".format(output_folder))
