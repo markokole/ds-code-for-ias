@@ -61,9 +61,44 @@ if __name__ == "__main__":
     log.warn('Regularization rate is {}'.format(reg))
     log.warn("Accuracy is {}".format(accuracy))
 
-    from pyspark.sql.types import FloatType
-    df = spark.createDataFrame([accuracy], FloatType())
+    #Area under the receiver operating characteristic (ROC) curve
+    from pyspark.mllib.evaluation import BinaryClassificationMetrics
 
-    df.coalesce(1).write.csv(output_folder)
+    input_auroc = prediction.select(['prediction', 'target']).withColumn('target_d', prediction['target'].cast('double')).drop('target').rdd
+    metrics = BinaryClassificationMetrics(input_auroc)
+    areaUnderROC = metrics.areaUnderROC
+    log.warn("Area under the precision-recall curve: {}".format(areaUnderROC))
+
+    results = [[accuracy, areaUnderROC]]
+
+    from pyspark.sql.types import StructType, StructField, DoubleType
+    schema = StructType([
+        StructField("accuracy", DoubleType(), True),
+        StructField("areaUnderROC", DoubleType(), True)])
+
+    results_df = spark.createDataFrame(results, schema)
+
+    log.warn(results_df.show())
+
+    results_df.coalesce(1).write.csv(output_folder, header = 'true')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #from pyspark.sql.types import FloatType
+    #df = spark.createDataFrame([accuracy], FloatType())
+
+    #df.coalesce(1).write.csv(output_folder)
 
     log.warn("Output saved to {}".format(output_folder))
