@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     train_df = train_df.select(["target", "features"])
 
-    (train, test) = train_df.randomSplit([0.7, 0.3])
+    (train, test) = train_df.randomSplit([0.8, 0.2])
 
     ## training
     from pyspark.ml.classification import LogisticRegression
