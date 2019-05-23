@@ -16,6 +16,8 @@ if __name__ == "__main__":
     input_file = list_arg[0]
     output_folder = list_arg[1]
 
+    #input_file = "s3a://hdp-hive-s3/santander/train.csv"
+
     # load file into df
     train_df = spark.read.csv(input_file, header=True, inferSchema=True)
 
@@ -77,6 +79,8 @@ if __name__ == "__main__":
         StructField("areaUnderROC", DoubleType(), True)])
 
     results_df = spark.createDataFrame(results, schema)
+
+    #print(results_df.show())
 
     log.warn(results_df.show())
 
