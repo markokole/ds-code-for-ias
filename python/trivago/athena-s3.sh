@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir datalake_files
-tar -xvf datalake.tar.gz -C datalake_files
+tar -xvf datalake.tar -C datalake_files
 
 # create main bucket
 aws s3 mb s3://athena-trivago-auto/
