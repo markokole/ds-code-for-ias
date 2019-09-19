@@ -1,11 +1,14 @@
 #!/bin/bash
 
+mkdir datalake_files
+tar -xvf datalake.tar.gz -C datalake_files
+
 # create main bucket
 aws s3 mb s3://athena-trivago-auto/
 
 # upload files to S3
-aws s3 cp /local-git/datalake/unique_selling_points.json s3://athena-trivago-auto/unique_selling_points/
-aws s3 cp /local-git/datalake/accommodation.json s3://athena-trivago-auto/accommodation/
+aws s3 cp datalake_files/unique_selling_points.json s3://athena-trivago-auto/unique_selling_points/
+aws s3 cp datalake_files/accommodation.json s3://athena-trivago-auto/accommodation/
 
 # create database
 aws athena start-query-execution --query-string "create database trivago_auto" --result-configuration "OutputLocation=s3://athena-trivago-auto/query_result_output/"
