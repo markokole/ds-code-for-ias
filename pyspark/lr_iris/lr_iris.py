@@ -12,10 +12,8 @@ if __name__ == "__main__":
     log4jLogger = spark._jvm.org.apache.log4j
     log = log4jLogger.LogManager.getLogger(__name__)
 
-    list_arg = sys.argv[1].split(';')
-
-    input_file = list_arg[0]
-    output_dir = list_arg[1]
+    input_file = "s3a://hdp-hive-s3/test/iris.csv"
+    output_dir = "s3a://hdp-hive-s3/test/git_iris_out"
 
     # load file into df
     iris_df = spark.read.csv(input_file, header=True, inferSchema=True)
